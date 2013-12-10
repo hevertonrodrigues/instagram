@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" class="hl-pt-br logged-in ">
+<head>
+	<meta charset="UTF-8" />
+    <title>Page Title</title>
+	<meta name="robots" content="noimageindex" />
+	<!-- <link rel="Shortcut Icon" type="image/x-icon" href="favicon.ico" /> -->
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script>
+		$(document).ready(function() {
+
+			var time = 0;
+			var picIndex = 0;
+			var items = [];
+			var tag = 'set_a_hashtag';
+			var page = $(location).attr('href');
+			var pageLoad = 'none';
+			pageLoad = page.split('#');
+			pageLoad = pageLoad[1];
+
+			if ( pageLoad ) tag = pageLoad;
+			getPhotos( tag );
+
+			function getPhotos( hashtag ){
+				$.getJSON( "ajax.php?hashtag=" + hashtag , function( data ) {
+					$.each( data, function( key, item ) {
+						console.log(item.name);
+						itemContent = '';
+						itemContent = '<div><img id="' + item.id + '" src="' + item.photo + '" alt="' + item.name + '" title="' + item.name + '"><p>';
+
+						$.each( item.hashtags, function( k, hash ){
+							itemContent += ' <a href="#">#' + hash + '</a> ';
+						});
+						itemContent += '</p><br><h1>' + item.name + '</h1></div>';
+
+						items.push( itemContent );
+						setTimeout(function() {
+							changePhoto( items[picIndex] );
+						}, time);
+						time = time + 5000;
+					});
+				});
+			}
+			function changePhoto( pic ){
+				$("#full-image").find('div').fadeOut( 1000, function() {
+					$(this).remove();
+				});
+				$( "<div>", {
+					"class": "full-pic",
+					html: pic
+				}).hide().appendTo( "#full-image" ).delay( 1000 ).fadeIn( 1000 );
+				$("#full-image").find('div').fadeIn();
+				picIndex++;
+				if ( picIndex >= items.length ) {
+					items = [];
+					picIndex = 0;
+					time = 2000;
+					getPhotos( tag );
+				};
+			}
+		});
+	</script>
+</head>
+<body>
+	<div id="full-image"></div>
+</body>
+</html>

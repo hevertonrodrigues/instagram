@@ -1,0 +1,23 @@
+#full-image{
+    width: 580px;
+	margin: 50px auto;
+}
+
+#full-image img{
+	width: 100%;
+	border: 5px solid #3f729b;
+}
+
+#full-image h1{
+
+}
+
+#full-image p, #full-image h1{
+	text-align: right;
+}
+
+#full-image p a{
+	text-decoration: none;
+	text-transform: uppercase;
+	color: #3f729b;
+}
